@@ -7,19 +7,19 @@
     <title>XMLHttpRequest</title>
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         ul li{
-            margin: 5px;
-            padding: 5px 10px;
+            margin:5px;
+            padding:5px 10px;
             border-radius: 10px;
-            border: 1px solid #ccc;
+            border:1px solid #ccc;
             box-shadow: 1px 1px 10px #999;
         }
         ul li:hover{
-            background: lightgreen;
-            padding: 8px 13px;
-            font-size: 18px;
+            background:lightgreen;
+            padding:8px 13px;
+            font-size:18px;
         }
     </style>
 </head>
@@ -28,7 +28,6 @@
     <div class="title"></div>
     <h4></h4>
     <ul></ul>
-    <h2>this is footer</h2>
 
 </body>
 </html>
@@ -40,12 +39,11 @@
     * 4.建立得到回應時的各項行為
     * 5.送出請求
     ********************************************************/
-
+    
     //宣告一個XMLHttpRequest物件
-    let xhr = new XMLHttpRequest();
+    let xhr=new XMLHttpRequest();
 
     //建立請求的各項設定及實質內容
-    // 為甚麼不用加;??????????????????????????????
     xhr.open('GET','https://kktix.com/events.json')
 
     //建立得到回應時的各項設定及行為
@@ -70,5 +68,4 @@
 
     //送出請求
     xhr.send();
-
     </script>

@@ -14,3 +14,27 @@
     text-align: center;
     font-size:32px;
 }
+
+.highlight-hover {
+    display: inline-block;
+    position: relative;
+}
+
+/* 默認狀態下沒有下劃線 */
+.highlight-hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 10px;  /* 螢光筆的粗度 */
+    background-color: rgba(0, 0, 255, 0.8); /* 螢光筆顏色，這裡選用螢光黃 */
+    transition: width 0.3s ease, left 0.3s ease;
+    z-index: -100;
+}
+
+/* 滑鼠游標進入時，橫條從中間延伸出來 */
+.highlight-hover:hover::after {
+    width: 100%;
+    left: 0;
+}

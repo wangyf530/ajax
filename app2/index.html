@@ -18,8 +18,9 @@
 <body>
   <div class="container">
     <h1 class="header">學生資料管理系統</h1>
-    <button class="btn btn-primary">增加學生</button>
+    <button class="btn btn-primary" onclick="create()">增加學生</button>
     <nav class="navbar" id="classesList">
+      <!-- <ul></ul> -->
       <!-- <button class="nav-item">一年一班</button>
       <button class="nav-item">一年二班</button>
       <button class="nav-item">一年三班</button> -->
@@ -28,6 +29,9 @@
 
     <div class="classes">
       <table class="w-100 table-striped m-auto" id="students"></table>
+    </div>
+    <div class="modal">
+
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -38,6 +42,7 @@
 </html>
 <script>
   getClasses();
+  // query(101);
   /************************************
   * 1.考慮觸發行為的事件
   * 2.建立監聽行為
@@ -51,19 +56,27 @@
       let data = JSON.parse(classes);
       // console.log(data);
       data.forEach(function (item, idx) {
-        let c = `<button class="nav-item">
-             <a class="nav-link" href="javascript:query(${item.classroom})"> ${item.classroom} </a>
-             </button>`
-        $('#classesList').append(c);
+        // let c = `<button class="nav-item nav-info">
+        //      <a class="nav-link" href="javascript:query(${item.classroom})"> ${item.classroom} </a>
+        //      </button>`
+        // $('#classesList').append(c);
 
+        let c=`<li class="nav-item ">
+              <a class="nav-link highlight-hover" href="javascript:query(${item.classroom})">${item.classroom}</a>
+             </li>`
+      $("#classesList").append(c);
+      query(data[0].classroom);
       })
     })
   }
 
 
-  //新增資料的函式
+  //載入新增資料表單內容 新增資料的函式
   function create() {
+    // 建立表單
+    $.get("./create_form.php",function(html){
 
+    })
   }
 
   //查詢指定班級的學生資料的函式
@@ -79,6 +92,7 @@
         <th class="p-2 center">生日</th> 
         <th class="p-2 center">科系</th> 
         <th class="p-2 center">地址</th> 
+        <th class="p-2 center">功能</th> 
         </tr>`
       $("#students").html(th);
       data.forEach(function (item, idx) {

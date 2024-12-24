@@ -1,50 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>學生資料管理系統</title>
-    <link rel="shortcut icon" href="#" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <!---匯入要使用的函式庫--->
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>學生資料管理系統</title>
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <!---匯入要使用的函式庫--->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
-<body>
-  <h1 class="header">學生資料管理系統</h1>
 
-  
+<body>
+  <div class="container">
+    <h1 class="header">學生資料管理系統</h1>
+    <button class="btn btn-primary">增加學生</button>
+    <nav class="navbar" id="classesList">
+      <!-- <button class="nav-item">一年一班</button>
+      <button class="nav-item">一年二班</button>
+      <button class="nav-item">一年三班</button> -->
+    </nav>
+
+
+    <div class="classes">
+      <table class="w-100 table-striped m-auto" id="students"></table>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
 <script>
-/************************************
-* 1.考慮觸發行為的事件
-* 2.建立監聽行為
-* 3.考慮是否需要代入參數
-* 4.是否會有回傳值？回傳值的功用及處理？
-* 5.是否需要更新畫面內容？更新畫面的方法？
-************************************/
+  getClasses();
+  /************************************
+  * 1.考慮觸發行為的事件
+  * 2.建立監聽行為
+  * 3.考慮是否需要代入參數
+  * 4.是否會有回傳值？回傳值的功用及處理？
+  * 5.是否需要更新畫面內容？更新畫面的方法？
+  ************************************/
+  // 取得班級資訊
+  function getClasses() {
+    $.get("./api/get_classes.php", function (classes) {
+      let data = JSON.parse(classes);
+      // console.log(data);
+      data.forEach(function (item, idx) {
+        let c = `<button class="nav-item">
+             <a class="nav-link" href="javascript:query(${item.classroom})"> ${item.classroom} </a>
+             </button>`
+        $('#classesList').append(c);
+
+      })
+    })
+  }
 
 
-//新增資料的函式
-function create(){
+  //新增資料的函式
+  function create() {
 
-}
+  }
 
-//查詢資料的函式
-function query(){
+  //查詢指定班級的學生資料的函式
+  function query(code) {
+    // 跟後端拿資料 第二個帶的參數 第三個回呼
+    $.get("./api/query.php", { code }, function (students) {
+      let data = JSON.parse(students);
+      // console.log(data);
+      let th = `<tr> 
+        <th class="p-2 center">學號</th> 
+        <th class="p-2 center">座號</th> 
+        <th class="p-2 center">姓名</th> 
+        <th class="p-2 center">生日</th> 
+        <th class="p-2 center">科系</th> 
+        <th class="p-2 center">地址</th> 
+        </tr>`
+      $("#students").html(th);
+      data.forEach(function (item, idx) {
+        let row = `<tr> 
+          <td class="p-2">${item.uni_id}</td> 
+          <td class="p-2 center">${item.seat_num}</td> 
+          <td class="p-2">${item.name}</td> 
+          <td class="p-2">${item.birthday}</td> 
+          <td class="p-2">${item.major}</td> 
+          <td class="p-2">${item.address}</td> 
+          
+          <td>
+            <button class="btn btn-success btn-sm" onclick="update(${item.id},${item.classroom})">編輯</button>
+            <button class="btn btn-danger btn-sm" onclick="del(${item.id},${item.classroom})"> 刪除 </button>
+          </td> 
+          </tr>`
+        $("#students").append(row);
+      })
+      // 函式綁id 用ajax傳到後端刪除
+    })
+  }
 
-}
+  //編輯資料的函式
+  function update() {
 
-//編輯資料的函式
-function update(){
+  }
 
-}
+  //刪除資料的函式
+  function del(id, classroom) {
+    let chk = confirm('確定?');
+    if (chk) {
+      $.post("./api/delete.php", { id, classroom }, function (res) {
+        // console.log('deleted', id)
+        query(res);
+      })
+    }
 
-//刪除資料的函式
-function del(){
-
-}
+  }
 
 </script>

@@ -6,6 +6,7 @@ include_once "db.php";
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+        <form action="./cr" method="post"></form>
       <div class="modal-header">
         <h5 class="modal-title" id="createModalLabel">新增學生</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -37,7 +38,7 @@ include_once "db.php";
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-        <button type="button" class="btn btn-primary">儲存</button>
+        <button type="submit" class="btn btn-primary">儲存</button>
       </div>
     </div>
   </div>

@@ -80,7 +80,7 @@ class DB{
         } else {
             $sql .= " WHERE `id` = '$id' ";
         }
-        echo $sql;
+        // echo $sql;
         return $this->pdo->exec($sql);
     }
 

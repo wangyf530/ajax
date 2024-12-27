@@ -28,15 +28,14 @@
 
 
     <div class="classes">
-      <table class="w-100 table-striped m-auto" id="students"></table>
+      <table id="students" class="w-100 table-striped m-auto"></table>
     </div>
-    <div class="modal">
 
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <div id="modal"> </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>
@@ -54,6 +53,8 @@
   function getClasses() {
     $.get("./api/get_classes.php", function (classes) {
       let data = JSON.parse(classes);
+      // 先清空
+      // ("#classesList").html('');
       // console.log(data);
       data.forEach(function (item, idx) {
         // let c = `<button class="nav-item nav-info">
@@ -61,21 +62,23 @@
         //      </button>`
         // $('#classesList').append(c);
 
-        let c=`<li class="nav-item ">
+        let c = `<li class="nav-item ">
               <a class="nav-link highlight-hover" href="javascript:query(${item.classroom})">${item.classroom}</a>
              </li>`
-      $("#classesList").append(c);
-      query(data[0].classroom);
+        $("#classesList").append(c);
+        query(data[0].classroom);
       })
     })
   }
-
-
+  // 全域變數
+  let CreateModal
   //載入新增資料表單內容 新增資料的函式
   function create() {
     // 建立表單
-    $.get("./create_form.php",function(html){
-      
+    $.get("./create_form.php", function (html) {
+      $('#modal').html(html);
+      let CreateModal = new bootstrap.Modal('#CreateModal');
+      CreateModal.show();
     })
   }
 
@@ -86,13 +89,13 @@
       let data = JSON.parse(students);
       // console.log(data);
       let th = `<tr> 
-        <th class="p-2 center">學號</th> 
-        <th class="p-2 center">座號</th> 
-        <th class="p-2 center">姓名</th> 
-        <th class="p-2 center">生日</th> 
-        <th class="p-2 center">科系</th> 
-        <th class="p-2 center">地址</th> 
-        <th class="p-2 center">功能</th> 
+        <th class="p-2 text-center">學號</th> 
+        <th class="p-2 text-center">座號</th> 
+        <th class="p-2 text-center">姓名</th> 
+        <th class="p-2 text-center">生日</th> 
+        <th class="p-2 text-center">科系</th> 
+        <th class="p-2 text-center">地址</th> 
+        <th class="p-2 text-center">功能</th> 
         </tr>`
       $("#students").html(th);
       data.forEach(function (item, idx) {
@@ -104,14 +107,30 @@
           <td class="p-2">${item.major}</td> 
           <td class="p-2">${item.address}</td> 
           
-          <td>
-            <button class="btn btn-success btn-sm" onclick="update(${item.id},${item.classroom})">編輯</button>
-            <button class="btn btn-danger btn-sm" onclick="del(${item.id},${item.classroom})"> 刪除 </button>
+          <td class="p-2">
+            <button class="btn btn-success btn-sm edit" onclick="update(${item.id},${item.classroom})">編輯</button>
+            <button class='btn btn-danger btn-sm' onclick='del(${item.id},this)'>刪除</button>
           </td> 
           </tr>`
         $("#students").append(row);
       })
-      // 函式綁id 用ajax傳到後端刪除
+      // 上面 函式綁id 用ajax傳到後端刪除
+      // ${item.classroom} 改成 this
+      // $('#students button').on('click', function () {
+      //   $(this).parents('tr').remove();
+      // })
+
+      $(".edit").on('click',function(){
+        let id = $(this).data("id");
+        getEditForm(id);
+      })
+    })
+  }
+
+  // 取得編輯資料表單內容
+  function getEditForm(id){
+    $.get("./edit_form.php",{id},function(html){
+      
     })
   }
 
@@ -121,12 +140,26 @@
   }
 
   //刪除資料的函式
-  function del(id, classroom) {
+  // function del(id, classroom) {
+  /* 
+  function del(id, btn) {
     let chk = confirm('確定?');
     if (chk) {
       $.post("./api/delete.php", { id, classroom }, function (res) {
         // console.log('deleted', id)
         query(res);
+      })
+    }
+
+  }
+  */
+
+  // 根據button來進行刪除
+  function del(id, btn) {
+    let chk = confirm('確定?');
+    if (chk) {
+      $.post("./api/delete.php", { id }, function () {
+        $(btn).parents('tr').remove();
       })
     }
 

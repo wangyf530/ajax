@@ -17,7 +17,7 @@
 <body>
   <div class="container">
     <h1 class="header">學生資料管理系統</h1>
-    <button class="btn btn-primary">增加學生</button>
+    <button class="btn btn-primary" onclick="create()">增加學生</button>
     <ul class="nav" id="classesList">
 
     </ul>
@@ -25,6 +25,9 @@
     <div class="classes">
       <table id="students" class="w-100 m-auto"></table>
     </div>
+
+    <div id="modal"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
@@ -41,7 +44,8 @@ getClasses();
 function getClasses(){
   $.get("./api/get_classes.php",function(classes){
     let data=JSON.parse(classes);
-    console.log(data);
+    $("#classesList").html(''); 
+   //console.log(data);
     data.forEach(function(item,idx){
       let c=`<li class="nav-item">
               <a class="nav-link" href="javascript:query(${item.classroom})">${item.classroom}</a>
@@ -51,10 +55,14 @@ function getClasses(){
     })
   })
 }
-
-//新增資料的函式
+let CreateModal
+//載入新增資料表單內容
 function create(){
-
+  $.get("./create_form.php",function(html){
+    $("#modal").html(html);
+    CreateModal = new bootstrap.Modal('#CreateModal');
+    CreateModal.show();
+  })
 }
 
 //查詢指定班的學生資料的函式
@@ -81,14 +89,31 @@ function query(code){
                 <td class='p-2'>${item.major}</td>
                 <td class='p-2'>${item.address}</td>
                 <td class='p-2'>
-                    <button class='btn btn-success'>編輯</button>
+                    <button class='btn btn-success edit' data-id='${item.id}'>編輯</button>
                     <button class='btn btn-danger' onclick='del(${item.id},${item.classroom})'>刪除</button>
                   </td>
                 </tr>`;
         $("#students").append(row);                
-      })           
+      })
+      
+      $(".edit").on("click",function(){
+        let id=$(this).data("id");
+           getEditForm(id);
+      })
   })
 }
+
+
+//取得編輯資料表單內容
+function getEditForm(id){
+  $.get("./edit_form.php",{id},function(html){
+    $("#modal").html(html);
+    let EditModal = new bootstrap.Modal('#EditModal');
+    EditModal.show();
+  })
+}
+
+
 
 //編輯資料的函式
 function update(){

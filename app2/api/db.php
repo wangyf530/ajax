@@ -65,7 +65,7 @@ class DB{
             // $values = array_values($array);
             $sql = "INSERT INTO $this->table (`" . join("`,`",$cols) . "`) VALUES ('" . join("','",$array) . "')";
         }
-        dd($array);
+        // dd($array);
         // echo $sql;
         return $this->pdo->exec($sql);
     }

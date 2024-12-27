@@ -54,7 +54,7 @@
     $.get("./api/get_classes.php", function (classes) {
       let data = JSON.parse(classes);
       // 先清空
-      // ("#classesList").html('');
+      $("#classesList").html('');
       // console.log(data);
       data.forEach(function (item, idx) {
         // let c = `<button class="nav-item nav-info">
@@ -66,8 +66,11 @@
               <a class="nav-link highlight-hover" href="javascript:query(${item.classroom})">${item.classroom}</a>
              </li>`
         $("#classesList").append(c);
-        query(data[0].classroom);
       })
+      // if($("#students")).{
+
+        query(data[0].classroom);
+      // }
     })
   }
   // 全域變數
@@ -77,7 +80,7 @@
     // 建立表單
     $.get("./create_form.php", function (html) {
       $('#modal').html(html);
-      let CreateModal = new bootstrap.Modal('#CreateModal');
+      CreateModal = new bootstrap.Modal('#CreateModal');
       CreateModal.show();
     })
   }
@@ -108,7 +111,7 @@
           <td class="p-2">${item.address}</td> 
           
           <td class="p-2">
-            <button class="btn btn-success btn-sm edit" onclick="update(${item.id},${item.classroom})">編輯</button>
+            <button class="btn btn-success btn-sm edit" data-id='${item.id}'>編輯</button>
             <button class='btn btn-danger btn-sm' onclick='del(${item.id},this)'>刪除</button>
           </td> 
           </tr>`
@@ -126,11 +129,13 @@
       })
     })
   }
-
+  let EditModal
   // 取得編輯資料表單內容
   function getEditForm(id){
     $.get("./edit_form.php",{id},function(html){
-      
+      $("#modal").html(html);
+      EditModal = new bootstrap.Modal("#EditModal");
+      EditModal.show();
     })
   }
 
@@ -162,6 +167,7 @@
         $(btn).parents('tr').remove();
       })
     }
+    getClasses()
 
   }
 
